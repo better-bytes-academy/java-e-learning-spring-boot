@@ -1,10 +1,13 @@
 package com.example.onlinelearning.entity;
 
+import com.example.onlinelearning.enums.RoleName;
 import com.example.onlinelearning.enums.UserStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -14,6 +17,7 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_id;
 
+    @Email
     @Column(name = "email" , unique = true, nullable = false)
     private String email;
 
@@ -28,7 +32,10 @@ public class User implements Serializable {
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserStatus status;
+    private UserStatus status = UserStatus.active;
+
+    @Transient
+    private List<RoleName> roles;
 
     public User() {
     }
@@ -95,5 +102,13 @@ public class User implements Serializable {
 
     public void setStatus(UserStatus status) {
         this.status = status;
+    }
+
+    public List<RoleName> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<RoleName> roles) {
+        this.roles = roles;
     }
 }
