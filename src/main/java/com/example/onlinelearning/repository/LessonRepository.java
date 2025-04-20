@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
     public Lesson findByLessonId(Integer lessonId);
+
 }

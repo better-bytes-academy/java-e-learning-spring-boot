@@ -1,7 +1,12 @@
 package com.example.onlinelearning.service;
 
 import com.example.onlinelearning.entity.Lesson;
+import com.example.onlinelearning.entity.LessonProgress;
+import com.example.onlinelearning.entity.User;
+import com.example.onlinelearning.repository.LessonProgressRepository;
 import com.example.onlinelearning.repository.LessonRepository;
+import com.example.onlinelearning.repository.UserRepository;
+import com.example.onlinelearning.response.LessonProgressResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -22,6 +27,12 @@ import java.util.UUID;
 public class LessonService {
     @Autowired
     private LessonRepository lessonRepository;
+
+    @Autowired
+    private LessonProgressRepository lessonProgressRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public Lesson create(Lesson lesson, MultipartFile file) throws IOException {
         String fileName = null;
@@ -100,5 +111,42 @@ public class LessonService {
         else{
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    public ResponseEntity<String> lessonProgressClickComplete(String userEmail, Map<String,Object> map_lessonId){
+        Integer lessonId = (Integer) map_lessonId.get("lessonId");
+        User user = userRepository.findByEmail(userEmail).get();
+        Integer userId = user.getUser_id();
+
+        LessonProgress lessonProgress = new LessonProgress();
+
+        lessonProgress.setUserId(userId);
+        lessonProgress.setLessonId(lessonId);
+        lessonProgress.setCompleted(true);
+
+        lessonProgressRepository.save(lessonProgress);
+
+        return ResponseEntity.ok("Complete the lesson");
+    }
+
+    public ResponseEntity<LessonProgressResponse> lessonProgressSelect(String userEmail, Map<String,Object> map_courseId){
+        User user = userRepository.findByEmail(userEmail).get();
+
+        Integer userId = user.getUser_id();
+        Integer courseId = (Integer) map_courseId.get("courseId");
+        int countLessonCompleted =  lessonProgressRepository.countLessonCompleted(courseId,userId).intValue();
+        int countAllLessonOfCourse = lessonProgressRepository.countAllLessonOfCourse(courseId).intValue();
+        double progressPercentage = countLessonCompleted * 100 / (double)countAllLessonOfCourse;
+        progressPercentage = Math.round(progressPercentage * 100.0) / 100.0;
+
+        LessonProgressResponse lessonProgressResponse = new LessonProgressResponse();
+
+        lessonProgressResponse.setUserId(userId);
+        lessonProgressResponse.setCourseId(courseId);
+        lessonProgressResponse.setCompletedLessons(countLessonCompleted);
+        lessonProgressResponse.setTotalLessons(countAllLessonOfCourse);
+        lessonProgressResponse.setProgressPercentage(progressPercentage);
+
+        return ResponseEntity.ok(lessonProgressResponse);
     }
 }
