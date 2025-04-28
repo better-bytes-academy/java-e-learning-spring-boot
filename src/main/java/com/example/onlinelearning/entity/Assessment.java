@@ -1,10 +1,15 @@
 package com.example.onlinelearning.entity;
 
+import com.example.onlinelearning.request.QuestionAndAnswerRequest;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "assessment")
@@ -41,10 +46,13 @@ public class Assessment implements Serializable {
     @Column(name = "due_date")
     private LocalDateTime dueDate;
 
+    @Transient
+    private List<QuestionAndAnswerRequest> listQuestion = new ArrayList<>();
+
     public Assessment() {
     }
 
-    public Assessment(Integer assessmentId, Integer courseId, Integer teacherId, String title, String description, Integer totalMarks, Integer timeLimit, Integer attemptLimit, Timestamp createdAt, LocalDateTime dueDate) {
+    public Assessment(Integer assessmentId, Integer courseId, Integer teacherId, String title, String description, Integer totalMarks, Integer timeLimit, Integer attemptLimit, Timestamp createdAt, LocalDateTime dueDate, List<QuestionAndAnswerRequest> listQuestion) {
         this.assessmentId = assessmentId;
         this.courseId = courseId;
         this.teacherId = teacherId;
@@ -55,6 +63,7 @@ public class Assessment implements Serializable {
         this.attemptLimit = attemptLimit;
         this.createdAt = createdAt;
         this.dueDate = dueDate;
+        this.listQuestion = listQuestion;
     }
 
     public Integer getAssessmentId() {
@@ -135,5 +144,13 @@ public class Assessment implements Serializable {
 
     public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public List<QuestionAndAnswerRequest> getListQuestion() {
+        return listQuestion;
+    }
+
+    public void setListQuestion(List<QuestionAndAnswerRequest> listQuestion) {
+        this.listQuestion = listQuestion;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.onlinelearning.controller;
 
 import com.example.onlinelearning.entity.Assessment;
+import com.example.onlinelearning.request.ListAnswerStudentRequest;
 import com.example.onlinelearning.service.AssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/assessment")
+    @RequestMapping("/assessment")
 public class AssessmentController {
     @Autowired
     private AssessmentService assessmentService;
@@ -24,6 +25,12 @@ public class AssessmentController {
     @PostMapping("/create")
     public ResponseEntity<?> assessmentCreate(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Assessment assessment){
         return assessmentService.assessmentCreate(userDetails, assessment);
+    }
+
+    @PreAuthorize("hasRole('STUDENT')")
+    @PostMapping("/start")
+    public ResponseEntity<?> assessmentStart(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ListAnswerStudentRequest listAnswerStudentRequest){
+        return assessmentService.assessmentStart(userDetails, listAnswerStudentRequest) ;
     }
 
 }
