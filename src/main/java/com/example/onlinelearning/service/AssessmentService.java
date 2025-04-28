@@ -2,7 +2,9 @@ package com.example.onlinelearning.service;
 
 import com.example.onlinelearning.entity.*;
 import com.example.onlinelearning.repository.*;
+import com.example.onlinelearning.request.ExamResultRequest;
 import com.example.onlinelearning.request.ListAnswerStudentRequest;
+import com.example.onlinelearning.response.ExamResultResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -110,6 +112,7 @@ public class AssessmentService {
         userSubmission.setUserId(userId);
         userSubmission.setAssessmentId(listAnswerStudentRequest.getAssessmentId());
         userSubmission.setScore(totalScore);
+        userSubmission.setAttemptCount(countSubmissionsOfUserForAssessment);
 
         userSubmissionRepository.save(userSubmission);
 
@@ -120,5 +123,17 @@ public class AssessmentService {
         }
 
         return ResponseEntity.ok(userSubmission);
+    }
+
+    @Transactional
+    public ResponseEntity<?> assessmentResult(UserDetails userDetails, ExamResultRequest examResultRequest) {
+        User user = userRepository.findByEmail(userDetails.getUsername()).get();
+        Integer userId = user.getUser_id();
+
+        ExamResultResponse examResultResponse = new ExamResultResponse();
+        examResultResponse.setUserSubmission(userSubmissionRepository.findByUserIdAndAssessmentIdAndAttemptCount(userId, examResultRequest.getAssessmentId(), examResultRequest.getAttemptCount()) );
+        examResultResponse.setListUserAnswer(userAnswerRepository.findBySubmissionId(examResultResponse.getUserSubmission().getSubmissionId()));
+
+        return ResponseEntity.ok(examResultResponse);
     }
 }

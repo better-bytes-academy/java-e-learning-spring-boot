@@ -26,15 +26,19 @@ public class UserSubmission implements Serializable {
     @Column(name = "submitted_at")
     private Timestamp submittedAt = new Timestamp(System.currentTimeMillis());
 
+    @Column(name = "attempt_count", nullable = false)
+    private Integer attemptCount;
+
     public UserSubmission() {
     }
 
-    public UserSubmission(Integer submissionId, Integer userId, Integer assessmentId, BigDecimal score, Timestamp submittedAt) {
+    public UserSubmission(Integer submissionId, Integer userId, Integer assessmentId, BigDecimal score, Timestamp submittedAt, Integer attemptCount) {
         this.submissionId = submissionId;
         this.userId = userId;
         this.assessmentId = assessmentId;
         this.score = score;
         this.submittedAt = submittedAt;
+        this.attemptCount = attemptCount;
     }
 
     public Integer getSubmissionId() {
@@ -75,5 +79,13 @@ public class UserSubmission implements Serializable {
 
     public void setSubmittedAt(Timestamp submittedAt) {
         this.submittedAt = submittedAt;
+    }
+
+    public Integer getAttemptCount() {
+        return attemptCount;
+    }
+
+    public void setAttemptCount(Integer attemptCount) {
+        this.attemptCount = attemptCount;
     }
 }

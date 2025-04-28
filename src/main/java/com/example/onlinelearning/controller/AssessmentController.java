@@ -1,6 +1,7 @@
 package com.example.onlinelearning.controller;
 
 import com.example.onlinelearning.entity.Assessment;
+import com.example.onlinelearning.request.ExamResultRequest;
 import com.example.onlinelearning.request.ListAnswerStudentRequest;
 import com.example.onlinelearning.service.AssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,4 +34,9 @@ public class AssessmentController {
         return assessmentService.assessmentStart(userDetails, listAnswerStudentRequest) ;
     }
 
+    @PreAuthorize("hasRole('STUDENT')")
+    @PostMapping("/result")
+    public ResponseEntity<?> assessmentResult(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ExamResultRequest examResultRequest){
+        return assessmentService.assessmentResult(userDetails, examResultRequest);
+    }
 }

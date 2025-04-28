@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface UserSubmissionRepository extends JpaRepository<UserSubmission,Integer> {
     @Query("select count(us) from UserSubmission us where us.userId = :userId and us.assessmentId = :assessmentId")
     long countSubmissionsOfUserForAssessment(@Param("userId") int userId, @Param("assessmentId") int assessmentId);
+
+    UserSubmission findByUserIdAndAssessmentIdAndAttemptCount(Integer userId, Integer assessmentId, Integer attemptCount);
 }
