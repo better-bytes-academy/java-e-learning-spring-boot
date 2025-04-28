@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +36,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex){
+        Map<String,String> mess = new HashMap<>();
+        mess.put("message",ex.getMessage());
+        return ResponseEntity.badRequest().body(mess);
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<?> handleIOException(IOException ex){
+        Map<String,String> mess = new HashMap<>();
+        mess.put("message",ex.getMessage());
+        return ResponseEntity.badRequest().body(mess);
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<?> handleIOException(FileNotFoundException ex){
         Map<String,String> mess = new HashMap<>();
         mess.put("message",ex.getMessage());
         return ResponseEntity.badRequest().body(mess);
