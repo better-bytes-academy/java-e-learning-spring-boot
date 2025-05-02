@@ -2,9 +2,11 @@ package com.example.onlinelearning.service;
 
 import com.example.onlinelearning.entity.Courses;
 import com.example.onlinelearning.entity.Enrollment;
+import com.example.onlinelearning.entity.ForumDis;
 import com.example.onlinelearning.entity.User;
 import com.example.onlinelearning.repository.CoursesRepository;
 import com.example.onlinelearning.repository.EnrollmentRepository;
+import com.example.onlinelearning.repository.ForumDisRepository;
 import com.example.onlinelearning.repository.UserRepository;
 import com.example.onlinelearning.request.UpdateCourses;
 import jakarta.transaction.Transactional;
@@ -23,11 +25,20 @@ public class CourseService {
 
     @Autowired
     private EnrollmentRepository enrollmentRepository;
+
+    @Autowired
+    private ForumDisRepository forumDisRepository;
+
     @Transactional
     public Courses create(UserDetails userDetails, Courses courses){
         User user = userRepository.findByEmail(userDetails.getUsername()).get();
         courses.setCreator_id(user.getUser_id());
         coursesRepository.save(courses);
+
+        ForumDis forumDis = new ForumDis();
+        forumDis.setCourseId(courses.getId());
+        forumDis.setUserId(user.getUser_id());
+        forumDisRepository.save(forumDis);
 
         return coursesRepository.findById(courses.getId()).get();
     }
