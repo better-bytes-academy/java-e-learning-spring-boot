@@ -38,7 +38,7 @@ public class CoursesController {
 
     @PreAuthorize("hasRole('STUDENT')")
     @PostMapping("/enrollment")
-    public ResponseEntity<?> enrollment_method(@RequestBody Enrollment enrollment){
-        return ResponseEntity.ok(courseService.enrollment_method(enrollment));
+    public ResponseEntity<?> enrollment_method(@AuthenticationPrincipal UserDetails userDetails,@RequestBody Enrollment enrollment){
+        return ResponseEntity.ok(courseService.enrollment_method(userDetails,enrollment));
     }
 }

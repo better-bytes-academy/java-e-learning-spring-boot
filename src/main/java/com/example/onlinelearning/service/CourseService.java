@@ -61,7 +61,14 @@ public class CourseService {
     }
 
     @Transactional
-    public Enrollment enrollment_method(Enrollment enrollment){
+    public Enrollment enrollment_method(UserDetails userDetails,Enrollment enrollment){
+        User user = userRepository.findByEmail(userDetails.getUsername()).get();
+        Integer userId = user.getUser_id();
+
+        if(enrollmentRepository.findByUserIdAndCourseId(userId,enrollment.getCourseId()) != null){
+            throw new IllegalArgumentException("You have registered for this course.");
+        }
+
         enrollmentRepository.save(enrollment);
         return enrollment;
     }

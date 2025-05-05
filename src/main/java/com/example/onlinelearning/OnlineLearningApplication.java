@@ -1,6 +1,7 @@
 package com.example.onlinelearning;
 
 import com.example.onlinelearning.util.EnrollmentId;
+import com.example.onlinelearning.util.NotificationRecipientID;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -19,13 +20,14 @@ public class OnlineLearningApplication {
         SpringApplication.run(OnlineLearningApplication.class, args);
 
         System.out.println("hello world");
-        Set<EnrollmentId> set = new HashSet<>();
-        set.add(new EnrollmentId(1,2));
-        set.add(new EnrollmentId(2,1));
-        set.add(new EnrollmentId(1,1));
+        Set<NotificationRecipientID> set = new HashSet<>();
+        set.add(new NotificationRecipientID(1,2));
+        set.add(new NotificationRecipientID(2,1));
+        set.add(new NotificationRecipientID(1,1));
+        set.add(new NotificationRecipientID(1,1));
 
-        for (EnrollmentId value: set){
-            System.out.println(value.getUserId() + "\t" + value.getCourseId());
+        for (NotificationRecipientID value: set){
+            System.out.println(value.getNotificationId() + "\t" + value.getUserId());
         }
     }
 
