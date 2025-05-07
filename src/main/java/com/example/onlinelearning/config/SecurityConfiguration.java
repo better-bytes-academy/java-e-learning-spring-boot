@@ -36,6 +36,8 @@ public class SecurityConfiguration {
                                 .requestMatchers("/register").permitAll()  // Cập nhật để không sử dụng authorizeHttpRequests()
                                 .requestMatchers("/login").permitAll()
                                 .requestMatchers("/demo-controller-permitAll").permitAll()
+                                .requestMatchers("/forgot-password").permitAll()
+                                .requestMatchers("/reset-password").permitAll()
 
                                 .requestMatchers("/helloStudent").hasRole("STUDENT")
                                 .requestMatchers("/helloTeacher").hasRole("TEACHER")

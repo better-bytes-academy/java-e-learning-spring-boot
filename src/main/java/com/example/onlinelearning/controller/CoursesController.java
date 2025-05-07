@@ -25,14 +25,14 @@ public class CoursesController {
 
     @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/update/{coursesId}")
-    public ResponseEntity<Courses> update(@Valid @RequestBody UpdateCourses updateCourses, @PathVariable Integer coursesId){
-        return ResponseEntity.ok(courseService.update(updateCourses,coursesId));
+    public ResponseEntity<Courses> update(@AuthenticationPrincipal UserDetails userDetails,@Valid @RequestBody UpdateCourses updateCourses, @PathVariable Integer coursesId){
+        return ResponseEntity.ok(courseService.update(userDetails,updateCourses,coursesId));
     }
 
     @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/delete")
-    public ResponseEntity<String> delete(@RequestParam Integer coursesId){
-        courseService.delete(coursesId);
+    public ResponseEntity<String> delete(@AuthenticationPrincipal UserDetails userDetails,@RequestParam Integer coursesId){
+        courseService.delete(userDetails,coursesId);
         return ResponseEntity.ok("Delete course successfully");
     }
 

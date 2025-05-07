@@ -27,7 +27,6 @@ public class LessonController {
 
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/view_file")
     public ResponseEntity<?> viewFile(@RequestBody Map<String, Object> Map_lessonId) throws FileNotFoundException {
         return lessonService.viewFile(Map_lessonId);

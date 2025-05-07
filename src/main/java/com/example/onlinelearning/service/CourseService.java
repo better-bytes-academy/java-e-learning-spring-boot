@@ -15,6 +15,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CourseService {
     @Autowired
@@ -44,19 +46,42 @@ public class CourseService {
     }
 
     @Transactional
-    public Courses update(UpdateCourses updateCourses, Integer coursesId){
-        Courses courses = coursesRepository.findById(coursesId).get();
-        courses.setTitle(updateCourses.getTitle());
-        courses.setDescription(updateCourses.getDescription());
-        courses.setCategory(updateCourses.getCategory());
-        courses.setLevel(updateCourses.getLevel());
-        coursesRepository.save(courses);
+    public Courses update(UserDetails userDetails,UpdateCourses updateCourses, Integer coursesId){
+        Optional<Courses> courses = coursesRepository.findById(coursesId);
+        User user = userRepository.findByEmail(userDetails.getUsername()).get();
+        Integer userId = user.getUser_id();
 
-        return courses;
+        if(courses.isPresent() == false){
+            throw new IllegalArgumentException("Does not exist in this subject");
+        }
+
+        if(userId != coursesRepository.findById(coursesId).get().getCreator_id()){
+            throw new IllegalArgumentException("You did not create a course, cannot update");
+        }
+
+        courses.get().setTitle(updateCourses.getTitle());
+        courses.get().setDescription(updateCourses.getDescription());
+        courses.get().setCategory(updateCourses.getCategory());
+        courses.get().setLevel(updateCourses.getLevel());
+        coursesRepository.save(courses.get());
+
+        return courses.get();
     }
 
     @Transactional
-    public void delete(Integer coursesId) {
+    public void delete(UserDetails userDetails,Integer coursesId) {
+        Optional<Courses> courses = coursesRepository.findById(coursesId);
+        User user = userRepository.findByEmail(userDetails.getUsername()).get();
+        Integer userId = user.getUser_id();
+
+        if(courses.isPresent() == false){
+            throw new IllegalArgumentException("Does not exist in this subject");
+        }
+
+        if(userId != coursesRepository.findById(coursesId).get().getCreator_id()){
+            throw new IllegalArgumentException("You did not create a course, cannot delete");
+        }
+
         coursesRepository.deleteById(coursesId);
     }
 
@@ -68,6 +93,8 @@ public class CourseService {
         if(enrollmentRepository.findByUserIdAndCourseId(userId,enrollment.getCourseId()) != null){
             throw new IllegalArgumentException("You have registered for this course.");
         }
+
+        enrollment.setUserId(userId);
 
         enrollmentRepository.save(enrollment);
         return enrollment;

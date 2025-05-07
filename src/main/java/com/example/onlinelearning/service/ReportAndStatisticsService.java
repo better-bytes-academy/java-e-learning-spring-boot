@@ -1,5 +1,6 @@
 package com.example.onlinelearning.service;
 
+import com.example.onlinelearning.entity.Courses;
 import com.example.onlinelearning.entity.User;
 import com.example.onlinelearning.repository.CoursesRepository;
 import com.example.onlinelearning.repository.EnrollmentRepository;
@@ -11,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class ReportAndStatisticsService {
@@ -32,6 +30,12 @@ public class ReportAndStatisticsService {
     public StudentStatisticsResponse studentProgress(UserDetails userDetails, Integer courseId) {
         User user = userRepository.findByEmail(userDetails.getUsername()).get();
         Integer userId = user.getUser_id();
+
+        Optional<Courses> courses = coursesRepository.findById(courseId);
+
+        if(courses.isPresent() == false){
+            throw new IllegalArgumentException("Does not exist in this subject");
+        }
 
         if(userId != coursesRepository.findById(courseId).get().getCreator_id()){
             throw new IllegalArgumentException("You are not the course creator.");
@@ -65,6 +69,12 @@ public class ReportAndStatisticsService {
     public CourseStatisticResponse courseStatistic(UserDetails userDetails, Integer courseId) {
         User user = userRepository.findByEmail(userDetails.getUsername()).get();
         Integer userId = user.getUser_id();
+
+        Optional<Courses> courses = coursesRepository.findById(courseId);
+
+        if(courses.isPresent() == false){
+            throw new IllegalArgumentException("Does not exist in this subject");
+        }
 
         if(userId != coursesRepository.findById(courseId).get().getCreator_id()){
             throw new IllegalArgumentException("You are not the course creator.");

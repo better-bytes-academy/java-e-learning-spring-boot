@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 
 public class AuthenticationController {
@@ -37,5 +39,13 @@ public class AuthenticationController {
         return ResponseEntity.ok("Logout Successfully");
     }
 
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String,Object>> forgotPassword(@RequestBody Map<String,Object> mapEmail){
+        return ResponseEntity.ok(authenticationService.forgotPassword(mapEmail));
+    }
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<Map<String,Object>> resetPassword(@RequestParam(required = false) String email, @RequestParam(required = false) String token, @RequestBody Map<String,Object> mapNewPassword){
+        return ResponseEntity.ok(authenticationService.resetPassword(email,token,mapNewPassword));
+    }
 }
