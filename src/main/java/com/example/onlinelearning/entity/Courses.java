@@ -37,10 +37,13 @@ public class Courses implements Serializable {
     @Column(name = "created_at", nullable = false)
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
+    @Transient
+    private Integer totalStudents;
+
     public Courses() {
     }
 
-    public Courses(Integer id, Integer creator_id, String title, String description, String category, Level level, Timestamp createdAt) {
+    public Courses(Integer id, Integer creator_id, String title, String description, String category, Level level, Timestamp createdAt, Integer totalStudents) {
         this.id = id;
         this.creator_id = creator_id;
         this.title = title;
@@ -48,6 +51,7 @@ public class Courses implements Serializable {
         this.category = category;
         this.level = level;
         this.createdAt = createdAt;
+        this.totalStudents = totalStudents;
     }
 
     public Integer getId() {
@@ -104,5 +108,13 @@ public class Courses implements Serializable {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Integer getTotalStudents() {
+        return totalStudents;
+    }
+
+    public void setTotalStudents(Integer totalStudents) {
+        this.totalStudents = totalStudents;
     }
 }

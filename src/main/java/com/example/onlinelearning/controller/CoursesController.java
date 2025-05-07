@@ -12,6 +12,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/courses")
 public class CoursesController {
@@ -40,5 +43,10 @@ public class CoursesController {
     @PostMapping("/enrollment")
     public ResponseEntity<?> enrollment_method(@AuthenticationPrincipal UserDetails userDetails,@RequestBody Enrollment enrollment){
         return ResponseEntity.ok(courseService.enrollment_method(userDetails,enrollment));
+    }
+
+    @PostMapping("/filter-courses")
+    public ResponseEntity<List<Courses>> filterCourses(@RequestParam(required = false) String category, @RequestParam(required = false) String title, @RequestParam(required = false) Boolean popular){
+        return ResponseEntity.ok(courseService.filterCourses(category,title,popular));
     }
 }

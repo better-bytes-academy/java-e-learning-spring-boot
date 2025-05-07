@@ -4,18 +4,16 @@ import com.example.onlinelearning.entity.Courses;
 import com.example.onlinelearning.entity.Enrollment;
 import com.example.onlinelearning.entity.ForumDis;
 import com.example.onlinelearning.entity.User;
-import com.example.onlinelearning.repository.CoursesRepository;
-import com.example.onlinelearning.repository.EnrollmentRepository;
-import com.example.onlinelearning.repository.ForumDisRepository;
-import com.example.onlinelearning.repository.UserRepository;
+import com.example.onlinelearning.repository.*;
 import com.example.onlinelearning.request.UpdateCourses;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CourseService {
@@ -30,6 +28,9 @@ public class CourseService {
 
     @Autowired
     private ForumDisRepository forumDisRepository;
+
+    @Autowired
+    private CoursesRepositoryImp coursesRepositoryImp;
 
     @Transactional
     public Courses create(UserDetails userDetails, Courses courses){
@@ -98,5 +99,21 @@ public class CourseService {
 
         enrollmentRepository.save(enrollment);
         return enrollment;
+    }
+
+    public List<Courses> filterCourses(String category,String title,Boolean popular) {
+        List<Courses> listCourses = coursesRepositoryImp.filterCourses(category, title);
+
+        if(popular == null){
+            return listCourses;
+        }
+        else if(popular == true){ // giảm dần
+            listCourses.sort(Comparator.comparing(Courses::getTotalStudents).reversed());
+        }
+        else// tăng dần
+            listCourses.sort(Comparator.comparing(Courses::getTotalStudents));
+
+
+        return listCourses;
     }
 }

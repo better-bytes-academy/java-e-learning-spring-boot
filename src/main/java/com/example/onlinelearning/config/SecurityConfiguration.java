@@ -38,6 +38,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/demo-controller-permitAll").permitAll()
                                 .requestMatchers("/forgot-password").permitAll()
                                 .requestMatchers("/reset-password").permitAll()
+                                .requestMatchers("/courses/filter-courses").permitAll()
 
                                 .requestMatchers("/helloStudent").hasRole("STUDENT")
                                 .requestMatchers("/helloTeacher").hasRole("TEACHER")
