@@ -38,7 +38,7 @@ public class User implements Serializable, UserDetails {
     private String name;
 
     @Column(name = "created_at", nullable = false)
-    private Timestamp createdAt = new Timestamp(System.currentTimeMillis());;
+    private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
